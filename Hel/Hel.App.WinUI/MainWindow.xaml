@@ -1,19 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="Hel.App.WinUI.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Hel.App.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Hel.App.WinUI">
+    Title="Hel">
 
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
+    <Grid Padding="16" RowDefinitions="Auto,Auto,*,Auto" RowSpacing="12">
+        <TextBlock Text="Hel" FontSize="28" FontWeight="SemiBold"/>
 
-    <Grid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+            <Button x:Name="SelectCsvButton" Content="Select CSV" Click="SelectCsvButton_Click"/>
+            <TextBlock Text="Output:" VerticalAlignment="Center" Opacity="0.8"/>
+            <TextBox x:Name="OutputFolderTextBox" Width="600" IsReadOnly="True"/>
+        </StackPanel>
 
+        <Border Grid.Row="2" BorderThickness="1" CornerRadius="6" Padding="12">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Status" FontSize="16" FontWeight="SemiBold"/>
+                <TextBlock x:Name="StatusTextBlock" Text="Ready." TextWrapping="Wrap"/>
+                <TextBlock Text="Run log (this session)" FontSize="16" FontWeight="SemiBold" Margin="0,12,0,0"/>
+                <TextBox x:Name="LogTextBox" Height="260" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Row="3" Opacity="0.6"
+                   Text="Phase 1: DI + config + logging bootstrap (CSV load smoke test)"/>
     </Grid>
 </Window>

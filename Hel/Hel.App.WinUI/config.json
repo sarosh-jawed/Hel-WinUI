@@ -1,0 +1,7 @@
+{
+  "App": {
+    "Name": "Hel",
+    "OutputRoot": "%LOCALAPPDATA%\\Hel\\Output",
+    "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs"
+  }
+}
