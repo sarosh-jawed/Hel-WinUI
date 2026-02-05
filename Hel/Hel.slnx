@@ -1,9 +1,22 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
   <Project Path="Hel.App.WinUI/Hel.App.WinUI.csproj" Id="3fb02bc8-db64-449a-825a-a86a627d2908">
     <Platform Project="x64" />
     <Deploy />
   </Project>
-  <Project Path="Hel.Application/Hel.Application.csproj" Id="38f65249-f673-4910-a763-e70841e01edb" />
-  <Project Path="Hel.Domain/Hel.Domain.csproj" Id="ef9b8e4a-c0bd-47dd-ab83-7f47eccc294f" />
-  <Project Path="Hel.Infrastructure/Hel.Infrastructure.csproj" Id="c9e71dec-74a5-49ce-98c9-876ef34ed4dc" />
+  <Project Path="Hel.Application/Hel.Application.csproj" Id="38f65249-f673-4910-a763-e70841e01edb">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="Hel.Domain/Hel.Domain.csproj" Id="ef9b8e4a-c0bd-47dd-ab83-7f47eccc294f">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="Hel.Infrastructure/Hel.Infrastructure.csproj" Id="c9e71dec-74a5-49ce-98c9-876ef34ed4dc">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="Hel.Tests/Hel.Tests.csproj" Id="7a2dd78a-cc16-41d6-861d-e2f0f1cf8d08">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
 </Solution>
