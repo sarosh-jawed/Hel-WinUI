@@ -25,7 +25,8 @@
             </StackPanel>
         </Border>
 
-        <TextBlock Grid.Row="3" Opacity="0.6"
-                   Text="Phase 3: config schema + validation + local overrides (CSV smoke test retained)"/>
+        <TextBlock Grid.Row="3"
+                   Opacity="0.6"
+                   Text="Phase 4: CSV ingestion stable + tests (header-based mapping)"/>
     </Grid>
 </Window>
