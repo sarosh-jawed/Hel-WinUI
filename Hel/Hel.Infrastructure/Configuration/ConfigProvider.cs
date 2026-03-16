@@ -24,4 +24,17 @@ public sealed class ConfigProvider : IConfigProvider
 
         return fullPath;
     }
+
+    public string GetPrimaryLibraryScopeName()
+    {
+        var firstRule = _config.LibraryRules.FirstOrDefault();
+
+        if (firstRule is null || string.IsNullOrWhiteSpace(firstRule.LibraryName))
+        {
+            throw new InvalidOperationException(
+                "LibraryRules must contain at least one valid LibraryName for filtering.");
+        }
+
+        return firstRule.LibraryName.Trim();
+    }
 }

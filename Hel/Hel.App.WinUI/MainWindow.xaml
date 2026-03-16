@@ -7,26 +7,88 @@
     mc:Ignorable="d"
     Title="Hel">
 
-    <Grid Padding="16" RowDefinitions="Auto,Auto,*,Auto" RowSpacing="12">
-        <TextBlock Text="Hel" FontSize="28" FontWeight="SemiBold"/>
+    <Grid Padding="16"
+          RowDefinitions="Auto,Auto,Auto,Auto,*,Auto"
+          RowSpacing="12">
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-            <Button x:Name="SelectCsvButton" Content="Select CSV" Click="SelectCsvButton_Click"/>
-            <TextBlock Text="Output:" VerticalAlignment="Center" Opacity="0.8"/>
-            <TextBox x:Name="OutputFolderTextBox" Width="600" IsReadOnly="True"/>
+        <TextBlock Text="Hel"
+                   FontSize="28"
+                   FontWeight="SemiBold"/>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Spacing="12"
+                    VerticalAlignment="Center">
+            <Button x:Name="SelectCsvButton"
+                    Content="Select CSV"
+                    Click="SelectCsvButton_Click"/>
+
+            <Button x:Name="RunButton"
+                    Content="Run"
+                    Click="RunButton_Click"
+                    IsEnabled="False"/>
+
+            <TextBlock Text="Output:"
+                       VerticalAlignment="Center"
+                       Opacity="0.8"/>
+
+            <TextBox x:Name="OutputFolderTextBox"
+                     Width="600"
+                     IsReadOnly="True"/>
         </StackPanel>
 
-        <Border Grid.Row="2" BorderThickness="1" CornerRadius="6" Padding="12">
+        <TextBlock x:Name="ScopeTextBlock"
+                   Grid.Row="2"
+                   Text="Library scope: not loaded"
+                   Opacity="0.8"/>
+
+        <Border Grid.Row="3"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12">
             <StackPanel Spacing="8">
-                <TextBlock Text="Status" FontSize="16" FontWeight="SemiBold"/>
-                <TextBlock x:Name="StatusTextBlock" Text="Ready." TextWrapping="Wrap"/>
-                <TextBlock Text="Run log (this session)" FontSize="16" FontWeight="SemiBold" Margin="0,12,0,0"/>
-                <TextBox x:Name="LogTextBox" Height="260" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <TextBlock Text="Locations"
+                           FontSize="16"
+                           FontWeight="SemiBold"/>
+
+                <TextBlock x:Name="LocationSummaryTextBlock"
+                           Text="Load a CSV to see WAWL locations."
+                           TextWrapping="Wrap"/>
+
+                <ScrollViewer Height="150">
+                    <StackPanel x:Name="LocationsPanel" Spacing="6"/>
+                </ScrollViewer>
             </StackPanel>
         </Border>
 
-        <TextBlock Grid.Row="3"
+        <Border Grid.Row="4"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Status"
+                           FontSize="16"
+                           FontWeight="SemiBold"/>
+
+                <TextBlock x:Name="StatusTextBlock"
+                           Text="Ready."
+                           TextWrapping="Wrap"/>
+
+                <TextBlock Text="Run log (this session)"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Margin="0,12,0,0"/>
+
+                <TextBox x:Name="LogTextBox"
+                         Height="220"
+                         IsReadOnly="True"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Row="5"
                    Opacity="0.6"
-                   Text="Phase 4: CSV ingestion stable + tests (header-based mapping)"/>
+                   Text="Phase 5: location selection + WAWL filtering working"/>
     </Grid>
 </Window>
