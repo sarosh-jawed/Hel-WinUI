@@ -1,10 +1,10 @@
-using Hel.Application.Abstractions;
+using Hel.Application.Contracts;
+using Hel.Infrastructure.Configuration;
 using Hel.Infrastructure.Csv;
 using Hel.Infrastructure.Workflow;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Serilog;
 using System;
@@ -89,9 +89,10 @@ public partial class App : Microsoft.UI.Xaml.Application
                 // --- App window ---
                 services.AddSingleton<MainWindow>();
 
-                // --- Core services (Phase 1 placeholders) ---
-                services.AddSingleton<ICsvLoader, CsvLoader>();
-                services.AddSingleton<IWorkflowRunner, WorkflowRunner>();
+                // --- Phase 2 Service Contracts ---
+                services.AddSingleton<IConfigProvider, ConfigProvider>();
+                services.AddSingleton<ICsvIngestService, CsvIngestService>();
+                services.AddSingleton<IWorkflowOrchestrator, WorkflowOrchestrator>();
 
                 // Logging via Serilog is already wired; also keep MS ILogger available.
                 services.AddLogging();
