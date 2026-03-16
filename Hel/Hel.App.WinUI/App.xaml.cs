@@ -5,6 +5,7 @@ using Hel.Infrastructure.Workflow;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Serilog;
 using System;
@@ -42,33 +43,27 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     private static IHost CreateHost()
     {
-        // IMPORTANT: We intentionally avoid "using Hel.Application" in this UI project,
-        // because "Application" is a WinUI type name and can conflict with namespaces.
-
         return Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration((context, config) =>
             {
-                // Base path = app folder
+                config.Sources.Clear();
+
                 config.SetBasePath(AppContext.BaseDirectory);
 
-                // 1) Required base config
+                // Base shipped config with the app
                 config.AddJsonFile("config.json", optional: false, reloadOnChange: true);
 
-                // 2) Optional local override beside app (dev convenience)
-                config.AddJsonFile("config.local.json", optional: true, reloadOnChange: true);
+                // Optional machine/user-specific override
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string localOverridePath = Path.Combine(localAppData, "Hel", "config.local.json");
 
-                // 3) Optional local override in LocalAppData (user/machine specific)
-                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                var localConfigPath = Path.Combine(localAppData, "Hel", "config.local.json");
-                config.AddJsonFile(localConfigPath, optional: true, reloadOnChange: true);
+                config.AddJsonFile(localOverridePath, optional: true, reloadOnChange: true);
             })
             .UseSerilog((context, services, loggerConfig) =>
             {
-                // Log folder derived from config, with fallback.
-                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                var logsRoot = context.Configuration["App:LogsRoot"]
-                    ?.Replace("%LOCALAPPDATA%", localAppData, StringComparison.OrdinalIgnoreCase)
-                    ?? Path.Combine(localAppData, "Hel", "Logs");
+                var helConfig = HelConfigLoader.LoadAndValidate(context.Configuration);
+
+                string logsRoot = PathTokenResolver.ResolveLocalAppDataTokens(helConfig.Output.LogsRoot);
 
                 Directory.CreateDirectory(logsRoot);
 
@@ -83,18 +78,18 @@ public partial class App : Microsoft.UI.Xaml.Application
             })
             .ConfigureServices((context, services) =>
             {
-                // --- Config ---
-                services.AddSingleton<IConfiguration>(context.Configuration);
+                // Bind and validate once at startup.
+                var helConfig = HelConfigLoader.LoadAndValidate(context.Configuration);
 
-                // --- App window ---
+                services.AddSingleton(helConfig);
+
+                services.AddSingleton<IConfiguration>(context.Configuration);
                 services.AddSingleton<MainWindow>();
 
-                // --- Phase 2 Service Contracts ---
                 services.AddSingleton<IConfigProvider, ConfigProvider>();
                 services.AddSingleton<ICsvIngestService, CsvIngestService>();
                 services.AddSingleton<IWorkflowOrchestrator, WorkflowOrchestrator>();
 
-                // Logging via Serilog is already wired; also keep MS ILogger available.
                 services.AddLogging();
             })
             .Build();

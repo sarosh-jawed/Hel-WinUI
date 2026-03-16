@@ -26,6 +26,6 @@
         </Border>
 
         <TextBlock Grid.Row="3" Opacity="0.6"
-                   Text="Phase 2: domain models + service contracts (CSV smoke test retained)"/>
+                   Text="Phase 3: config schema + validation + local overrides (CSV smoke test retained)"/>
     </Grid>
 </Window>

@@ -3,5 +3,68 @@
     "Name": "Hel",
     "OutputRoot": "%LOCALAPPDATA%\\Hel\\Output",
     "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs"
+  },
+  "CsvColumns": {
+    "LibraryName": "loclibrary.name",
+    "LocationCode": "effective_location.code",
+    "LocationName": "effective_location.name",
+    "Title": "instances.title",
+    "Barcode": "items.barcode",
+    "EffectiveCallNumber": "items.effective_call_number",
+    "HoldingsCallNumber": "holdings.call_number"
+  },
+  "LibraryRules": [
+    {
+      "LibraryName": "William Allen White Library",
+      "RecipientKey": "wawl"
+    }
+  ],
+  "LocationRules": [
+    {
+      "Key": "wawl-stacks",
+      "LibraryName": "William Allen White Library",
+      "LocationCodes": [ "stacks" ],
+      "LocationNames": [],
+      "RecipientKey": "wawl"
+    }
+  ],
+  "CallNumberRules": [
+    {
+      "Key": "music-prefix",
+      "LibraryName": "William Allen White Library",
+      "MatchMode": "StartsWith",
+      "Prefix": "M",
+      "RangeStart": null,
+      "RangeEnd": null,
+      "RecipientKey": "wawl"
+    },
+    {
+      "Key": "dewey-000-099",
+      "LibraryName": "William Allen White Library",
+      "MatchMode": "DeweyRange",
+      "Prefix": null,
+      "RangeStart": 0,
+      "RangeEnd": 99.999,
+      "RecipientKey": "wawl"
+    }
+  ],
+  "Recipients": [
+    {
+      "Key": "wawl",
+      "DisplayName": "William Allen White Library",
+      "Email": ""
+    }
+  ],
+  "Output": {
+    "Root": "%LOCALAPPDATA%\\Hel\\Output",
+    "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs",
+    "MonthFolderFormat": "yyyy-MM",
+    "UnassignedFileName": "Unassigned.txt",
+    "RunSummaryFileName": "RunSummary.txt"
+  },
+  "TextTemplate": {
+    "RecipientFileLineTemplate": "{Title}\t{Barcode}\t{ResolvedCallNumber}",
+    "UnassignedFileLineTemplate": "{Title}\t{Barcode}\t{ResolvedCallNumber}",
+    "SummaryHeader": "Hel Run Summary"
   }
 }
