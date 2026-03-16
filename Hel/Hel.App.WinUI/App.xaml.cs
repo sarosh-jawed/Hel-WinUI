@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml;
 using Serilog;
 using System;
 using System.IO;
+using Hel.Infrastructure.Filtering;
 
 namespace Hel.App.WinUI;
 
@@ -88,6 +89,7 @@ public partial class App : Microsoft.UI.Xaml.Application
 
                 services.AddSingleton<IConfigProvider, ConfigProvider>();
                 services.AddSingleton<ICsvIngestService, CsvIngestService>();
+                services.AddSingleton<ILocationFilterService, LocationFilterService>();
                 services.AddSingleton<IWorkflowOrchestrator, WorkflowOrchestrator>();
 
                 services.AddLogging();
