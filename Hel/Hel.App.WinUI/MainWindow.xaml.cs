@@ -1,7 +1,5 @@
 using System;
-using System.IO;
-using Hel.Application.Abstractions;
-using Microsoft.Extensions.Configuration;
+using Hel.Application.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -14,11 +12,11 @@ namespace Hel.App.WinUI;
 
 public sealed partial class MainWindow : Window
 {
-    private readonly IConfiguration _config;
-    private readonly IWorkflowRunner _workflow;
+    private readonly IConfigProvider _configProvider;
+    private readonly IWorkflowOrchestrator _workflow;
     private readonly ILogger<MainWindow> _logger;
 
-    public MainWindow(IConfiguration config, IWorkflowRunner workflow, ILogger<MainWindow> logger)
+    public MainWindow(IConfigProvider configProvider, IWorkflowOrchestrator workflow, ILogger<MainWindow> logger)
     {
         InitializeComponent();
 
@@ -29,11 +27,11 @@ public sealed partial class MainWindow : Window
 
         appWindow.Resize(new SizeInt32(920, 520));
 
-        _config = config;
+        _configProvider = configProvider;
         _workflow = workflow;
         _logger = logger;
 
-        OutputFolderTextBox.Text = ResolveDefaultOutputFolder();
+        OutputFolderTextBox.Text = _configProvider.GetDefaultOutputFolder();
         AppendLog("App started. Ready.");
     }
 
@@ -61,16 +59,13 @@ public sealed partial class MainWindow : Window
             StatusTextBlock.Text = "Running...";
             AppendLog($"Selected CSV: {csvPath}");
 
-            var result = await _workflow.RunAsync(csvPath, outputFolder);
+            var summary = await _workflow.RunAsync(csvPath, outputFolder);
 
-            StatusTextBlock.Text = result.Success
-                ? $"Success: {result.Message} Rows={result.RowsProcessed}"
-                : $"Failed: {result.Message}";
-
+            StatusTextBlock.Text = $"Success: Loaded CSV successfully. Rows={summary.TotalRecords}";
             AppendLog(StatusTextBlock.Text);
 
-            _logger.LogInformation("UI run finished. Success={Success}, Rows={Rows}",
-                result.Success, result.RowsProcessed);
+            _logger.LogInformation("UI run finished. TotalRecords={TotalRecords}",
+                summary.TotalRecords);
         }
         catch (Exception ex)
         {
@@ -78,23 +73,6 @@ public sealed partial class MainWindow : Window
             AppendLog(StatusTextBlock.Text);
             _logger.LogError(ex, "Unexpected UI error.");
         }
-    }
-
-    private string ResolveDefaultOutputFolder()
-    {
-        // Config supports %LOCALAPPDATA% token.
-        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-        var outputRoot = _config["App:OutputRoot"]
-            ?.Replace("%LOCALAPPDATA%", localAppData, StringComparison.OrdinalIgnoreCase)
-            ?? Path.Combine(localAppData, "Hel", "Output");
-
-        // Month folder strategy (YYYY-MM)
-        var monthFolder = DateTime.Now.ToString("yyyy-MM");
-        var full = Path.Combine(outputRoot, monthFolder);
-
-        Directory.CreateDirectory(full);
-        return full;
     }
 
     private void AppendLog(string message)
