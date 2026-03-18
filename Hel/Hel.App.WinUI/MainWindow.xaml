@@ -89,6 +89,6 @@
 
         <TextBlock Grid.Row="5"
                    Opacity="0.6"
-                   Text="Phase 5: location selection + WAWL filtering working"/>
+                   Text="Phase 6: classification engine complete + tested"/>
     </Grid>
 </Window>

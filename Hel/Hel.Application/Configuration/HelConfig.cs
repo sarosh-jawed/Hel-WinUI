@@ -10,6 +10,7 @@ public sealed class HelConfig
     public List<LibraryRule> LibraryRules { get; set; } = new();
     public List<LocationRule> LocationRules { get; set; } = new();
     public List<CallNumberRule> CallNumberRules { get; set; } = new();
+    public CallNumberNormalization CallNumberNormalization { get; set; } = new();
     public List<RecipientDefinition> Recipients { get; set; } = new();
     public Output Output { get; set; } = new();
     public TextTemplate TextTemplate { get; set; } = new();

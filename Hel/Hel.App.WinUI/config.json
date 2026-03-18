@@ -36,7 +36,7 @@
       "Prefix": "M",
       "RangeStart": null,
       "RangeEnd": null,
-      "RecipientKey": "wawl"
+      "RecipientKey": "wawl"        
     },
     {
       "Key": "dewey-000-099",
@@ -48,6 +48,9 @@
       "RecipientKey": "wawl"
     }
   ],
+  "CallNumberNormalization": {
+    "StripPrefixes": [ "REF", "Q", "R" ]
+  },
   "Recipients": [
     {
       "Key": "wawl",
