@@ -3,7 +3,7 @@ using Hel.Domain.Models;
 namespace Hel.Application.Contracts;
 
 /// <summary>
-/// Applies location + call number rules and assigns each record to a bucket.
+/// Applies location rules first, then call-number rules, and returns deterministic routing results.
 /// </summary>
 public interface IClassificationService
 {
@@ -15,4 +15,5 @@ public interface IClassificationService
 public sealed record ClassificationResult(
     IReadOnlyList<ClassifiedItem> Classified,
     IReadOnlyList<ItemRecord> Unassigned,
-    int FallbackUsageCount);
+    int FallbackUsageCount,
+    int ParseFailuresCount);

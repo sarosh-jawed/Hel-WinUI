@@ -13,6 +13,7 @@ public static class HelConfigValidator
         var errors = new List<string>();
 
         ValidateCsvColumns(config, errors);
+        ValidateCallNumberNormalization(config, errors);
         ValidateRecipients(config, errors);
         ValidateRuleRecipientReferences(config, errors);
         ValidateCallNumberRules(config, errors);
@@ -151,6 +152,32 @@ public static class HelConfigValidator
             else
             {
                 errors.Add($"CallNumberRules[{i}].MatchMode '{rule.MatchMode}' is not supported. Use StartsWith or DeweyRange.");
+            }
+        }
+    }
+    private static void ValidateCallNumberNormalization(HelConfig config, List<string> errors)
+    {
+        if (config.CallNumberNormalization is null)
+        {
+            errors.Add("CallNumberNormalization section is required.");
+            return;
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        for (int i = 0; i < config.CallNumberNormalization.StripPrefixes.Count; i++)
+        {
+            string? prefix = config.CallNumberNormalization.StripPrefixes[i];
+
+            if (string.IsNullOrWhiteSpace(prefix))
+            {
+                errors.Add($"CallNumberNormalization.StripPrefixes[{i}] cannot be blank.");
+                continue;
+            }
+
+            if (!seen.Add(prefix.Trim()))
+            {
+                errors.Add($"CallNumberNormalization.StripPrefixes contains duplicate prefix '{prefix}'.");
             }
         }
     }
