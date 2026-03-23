@@ -214,11 +214,29 @@ public static class HelConfigValidator
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(config.TextTemplate.GreetingLine))
+            errors.Add("TextTemplate.GreetingLine is required.");
+
+        if (string.IsNullOrWhiteSpace(config.TextTemplate.CountLineTemplate))
+            errors.Add("TextTemplate.CountLineTemplate is required.");
+
+        if (string.IsNullOrWhiteSpace(config.TextTemplate.HeaderLine))
+            errors.Add("TextTemplate.HeaderLine is required.");
+
+        if (string.IsNullOrWhiteSpace(config.TextTemplate.BulletPrefix))
+            errors.Add("TextTemplate.BulletPrefix is required.");
+
         if (string.IsNullOrWhiteSpace(config.TextTemplate.RecipientFileLineTemplate))
             errors.Add("TextTemplate.RecipientFileLineTemplate is required.");
 
         if (string.IsNullOrWhiteSpace(config.TextTemplate.UnassignedFileLineTemplate))
             errors.Add("TextTemplate.UnassignedFileLineTemplate is required.");
+
+        if (string.IsNullOrWhiteSpace(config.TextTemplate.ClosingLine))
+            errors.Add("TextTemplate.ClosingLine is required.");
+
+        if (string.IsNullOrWhiteSpace(config.TextTemplate.SignatureLine))
+            errors.Add("TextTemplate.SignatureLine is required.");
 
         if (string.IsNullOrWhiteSpace(config.TextTemplate.SummaryHeader))
             errors.Add("TextTemplate.SummaryHeader is required.");

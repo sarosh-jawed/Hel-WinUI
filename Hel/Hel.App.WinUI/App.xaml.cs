@@ -3,6 +3,7 @@ using Hel.Infrastructure.Configuration;
 using Hel.Infrastructure.Csv;
 using Hel.Infrastructure.Classification;
 using Hel.Infrastructure.Workflow;
+using Hel.Infrastructure.Export;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -92,6 +93,8 @@ public partial class App : Microsoft.UI.Xaml.Application
                 services.AddSingleton<ICsvIngestService, CsvIngestService>();
                 services.AddSingleton<ILocationFilterService, LocationFilterService>();
                 services.AddSingleton<IClassificationService, ClassificationService>();
+                services.AddSingleton<TextBodyBuilder>();
+                services.AddSingleton<ITextExportService, TextExportService>();
                 services.AddSingleton<IWorkflowOrchestrator, WorkflowOrchestrator>();
 
                 services.AddLogging();

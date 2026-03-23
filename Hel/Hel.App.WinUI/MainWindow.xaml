@@ -14,29 +14,32 @@
         <TextBlock Text="Hel"
                    FontSize="28"
                    FontWeight="SemiBold"/>
-
         <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    Spacing="12"
-                    VerticalAlignment="Center">
+            Orientation="Horizontal"
+            Spacing="12"
+            VerticalAlignment="Center">
             <Button x:Name="SelectCsvButton"
-                    Content="Select CSV"
-                    Click="SelectCsvButton_Click"/>
+            Content="Select CSV"
+            Click="SelectCsvButton_Click"/>
+
+            <Button x:Name="ChooseOutputFolderButton"
+            Content="Choose Output Folder"
+            Click="ChooseOutputFolderButton_Click"/>
 
             <Button x:Name="RunButton"
-                    Content="Run"
-                    Click="RunButton_Click"
-                    IsEnabled="False"/>
+            Content="Run"
+            Click="RunButton_Click"
+            IsEnabled="False"/>
 
             <TextBlock Text="Output:"
-                       VerticalAlignment="Center"
-                       Opacity="0.8"/>
+               VerticalAlignment="Center"
+               Opacity="0.8"/>
 
             <TextBox x:Name="OutputFolderTextBox"
-                     Width="600"
-                     IsReadOnly="True"/>
+             Width="420"
+             IsReadOnly="True"
+             PlaceholderText="No folder selected"/>
         </StackPanel>
-
         <TextBlock x:Name="ScopeTextBlock"
                    Grid.Row="2"
                    Text="Library scope: not loaded"
@@ -89,6 +92,6 @@
 
         <TextBlock Grid.Row="5"
                    Opacity="0.6"
-                   Text="Phase 6: classification engine complete + tested"/>
+                   Text="Phase 7: TXT export + summary done"/>
     </Grid>
 </Window>

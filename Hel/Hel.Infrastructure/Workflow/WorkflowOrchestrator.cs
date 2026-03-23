@@ -5,8 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Hel.Infrastructure.Workflow;
 
 /// <summary>
-/// Phase 4 orchestrator: now uses real ingested ItemRecord objects instead of line counting.
-/// Classification and export still come later, so bucket counts remain empty for now.
+/// Phase 7 placeholder orchestrator.
+/// The UI currently drives filtering, classification, and export directly,
+/// but this class stays compile-safe and ready for later orchestration refactoring.
 /// </summary>
 public sealed class WorkflowOrchestrator : IWorkflowOrchestrator
 {
@@ -28,7 +29,10 @@ public sealed class WorkflowOrchestrator : IWorkflowOrchestrator
         int fallbackUsageCount = ingestResult.Records.Count(r => r.UsedHoldingsFallback);
 
         var summary = new RunSummary(
-            TotalRecords: ingestResult.Records.Count,
+            CsvFileName: Path.GetFileName(csvPath),
+            TotalRowsLoaded: ingestResult.Records.Count,
+            RowsAfterWawlFilter: ingestResult.Records.Count,
+            RowsAfterLocationFilter: ingestResult.Records.Count,
             CountsPerBucket: new Dictionary<string, int>(),
             UnassignedCount: 0,
             FallbackUsageCount: fallbackUsageCount,
@@ -36,8 +40,8 @@ public sealed class WorkflowOrchestrator : IWorkflowOrchestrator
         );
 
         _logger.LogInformation(
-            "Run completed. TotalRecords={TotalRecords}, FallbackUsageCount={FallbackUsageCount}, ParseFailures={ParseFailures}",
-            summary.TotalRecords,
+            "Run completed. TotalRowsLoaded={TotalRowsLoaded}, FallbackUsageCount={FallbackUsageCount}, ParseFailures={ParseFailuresCount}",
+            summary.TotalRowsLoaded,
             summary.FallbackUsageCount,
             summary.ParseFailuresCount);
 

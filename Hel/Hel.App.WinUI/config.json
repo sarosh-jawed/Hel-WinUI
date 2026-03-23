@@ -36,7 +36,7 @@
       "Prefix": "M",
       "RangeStart": null,
       "RangeEnd": null,
-      "RecipientKey": "wawl"        
+      "RecipientKey": "wawl"
     },
     {
       "Key": "dewey-000-099",
@@ -59,15 +59,21 @@
     }
   ],
   "Output": {
-    "Root": "%LOCALAPPDATA%\\Hel\\Output",
+    "Root": "%LOCALAPPDATA%\\Hel\\Output-LocalOverride",
     "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs",
     "MonthFolderFormat": "yyyy-MM",
     "UnassignedFileName": "Unassigned.txt",
     "RunSummaryFileName": "RunSummary.txt"
   },
   "TextTemplate": {
-    "RecipientFileLineTemplate": "{Title}\t{Barcode}\t{ResolvedCallNumber}",
-    "UnassignedFileLineTemplate": "{Title}\t{Barcode}\t{ResolvedCallNumber}",
+    "GreetingLine": "Hello here are the titles in your area that have been missing or lost",
+    "CountLineTemplate": "Count: {Count}",
+    "HeaderLine": "Title | Barcode | Call number",
+    "BulletPrefix": "*",
+    "RecipientFileLineTemplate": "{Title} | {Barcode} | {CallNumber}",
+    "UnassignedFileLineTemplate": "{Title} | {Barcode} | {CallNumber}",
+    "ClosingLine": "Thanks,",
+    "SignatureLine": "John",
     "SummaryHeader": "Hel Run Summary"
   }
 }
