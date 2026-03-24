@@ -11,4 +11,5 @@ public interface IConfigProvider
     HelConfig GetConfig();
     string GetDefaultOutputFolder();
     string GetPrimaryLibraryScopeName();
+    string GetLogFolder();
 }

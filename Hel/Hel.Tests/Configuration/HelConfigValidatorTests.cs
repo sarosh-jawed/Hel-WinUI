@@ -100,7 +100,7 @@ public class HelConfigValidatorTests
             Output = new Output
             {
                 Root = "%LOCALAPPDATA%\\Hel\\Output",
-                LogsRoot = "%LOCALAPPDATA%\\Hel\\Logs",
+                LogsRoot = "%DOCUMENTS%\\Hel\\Logs",
                 MonthFolderFormat = "yyyy-MM",
                 UnassignedFileName = "Unassigned.txt",
                 RunSummaryFileName = "RunSummary.txt"

@@ -16,7 +16,7 @@ public sealed class ConfigProvider : IConfigProvider
 
     public string GetDefaultOutputFolder()
     {
-        string outputRoot = PathTokenResolver.ResolveLocalAppDataTokens(_config.Output.Root);
+        string outputRoot = PathTokenResolver.ResolveKnownTokens(_config.Output.Root);
         string monthFolder = DateTime.Now.ToString(_config.Output.MonthFolderFormat);
 
         string fullPath = Path.Combine(outputRoot, monthFolder);
@@ -36,5 +36,12 @@ public sealed class ConfigProvider : IConfigProvider
         }
 
         return firstRule.LibraryName.Trim();
+    }
+
+    public string GetLogFolder()
+    {
+        string logsRoot = PathTokenResolver.ResolveKnownTokens(_config.Output.LogsRoot);
+        Directory.CreateDirectory(logsRoot);
+        return logsRoot;
     }
 }
