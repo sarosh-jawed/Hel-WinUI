@@ -1,0 +1,21 @@
+loclibrary.name,effective_location.code,effective_location.name,instances.title,items.barcode,items.effective_call_number,holdings.call_number
+William Allen White Library,stacks,Main Stacks,Stacks Location Override A,900000000001.00,999.99 ABC,
+William Allen White Library,stacks,Main Stacks,Stacks Location Override B,900000000002.00,,ABC 123
+William Allen White Library,stacks,Main Stacks,Stacks Location Override C,900000000003.00,M 555 TEST,
+William Allen White Library,fiction,Fiction,Music Prefix A,900000000004.00,M 123.4 MOZ,
+William Allen White Library,fiction,Fiction,Music Prefix Trim,900000000005.00,  M 999 TEST  ,
+William Allen White Library,fiction,Fiction,Dewey REF A,900000000006.00,REF 20.5 SCI,
+William Allen White Library,fiction,Fiction,Dewey Q A,900000000007.00,Q 75.25 TEST,
+William Allen White Library,fiction,Fiction,Unassigned 150,900000000008.00,150.1 BAD,
+William Allen White Library,fiction,Fiction,Unreadable Call,900000000009.00,ABC CALL,
+William Allen White Library,dvds,DVDs,Fallback Music,900000000010.00,,M 451 OST
+William Allen White Library,dvds,DVDs,Fallback Dewey,900000000011.00,,R 88.8 DVD
+William Allen White Library,dvds,DVDs,Fallback Unassigned,900000000012.00,,300.0 OOPS
+William Allen White Library,dvds,DVDs,Fallback ParseFail,900000000013.00,,???
+William Allen White Library,kids,Kids,Dewey Plain,900000000014.00,5.2 KID,
+William Allen White Library,graphic,Graphic Novels,Boundary 99.999,900000000015.00,99.999 EDGE,
+William Allen White Library,reserve,Reserve,Boundary 100.0,900000000016.00,100.0 EDGE,
+William Allen White Library,graphic,Graphic Novels,Music Prefix B,900000000017.00,M 001 GRAPH,
+William Allen White Library,reserve,Reserve,Readable NoMatch 700,900000000018.00,700.1 ART,
+Visser Research Library,stacks,Stacks,Other Library Music,900000000019.00,M 10 OTHER,
+Visser Research Library,fiction,Fiction,Other Library Dewey,900000000020.00,10.5 OTHER,
