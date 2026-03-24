@@ -7,39 +7,61 @@
     mc:Ignorable="d"
     Title="Hel">
 
-    <Grid Padding="16"
-          RowDefinitions="Auto,Auto,Auto,Auto,*,Auto"
+    <Grid x:Name="RootGrid"
+          Padding="16"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto"
           RowSpacing="12">
 
         <TextBlock Text="Hel"
                    FontSize="28"
                    FontWeight="SemiBold"/>
-        <StackPanel Grid.Row="1"
-            Orientation="Horizontal"
-            Spacing="12"
-            VerticalAlignment="Center">
-            <Button x:Name="SelectCsvButton"
-            Content="Select CSV"
-            Click="SelectCsvButton_Click"/>
 
-            <Button x:Name="ChooseOutputFolderButton"
-            Content="Choose Output Folder"
-            Click="ChooseOutputFolderButton_Click"/>
+        <Border Grid.Row="1"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Step 1 · Select CSV and export folder"
+                           FontSize="16"
+                           FontWeight="SemiBold"/>
 
-            <Button x:Name="RunButton"
-            Content="Run"
-            Click="RunButton_Click"
-            IsEnabled="False"/>
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button x:Name="SelectCsvButton"
+                            Content="Select CSV"
+                            Click="SelectCsvButton_Click"/>
 
-            <TextBlock Text="Output:"
-               VerticalAlignment="Center"
-               Opacity="0.8"/>
+                    <Button x:Name="ChooseOutputFolderButton"
+                            Content="Choose Output Folder"
+                            Click="ChooseOutputFolderButton_Click"/>
 
-            <TextBox x:Name="OutputFolderTextBox"
-             Width="420"
-             IsReadOnly="True"
-             PlaceholderText="No folder selected"/>
-        </StackPanel>
+                    <Button x:Name="PreviewButton"
+                            Content="Preview"
+                            Click="PreviewButton_Click"
+                            IsEnabled="False"/>
+
+                    <Button x:Name="ExportButton"
+                            Content="Export"
+                            Click="ExportButton_Click"
+                            IsEnabled="False"/>
+
+                    <Button x:Name="OpenLogFolderButton"
+                            Content="Open Log Folder"
+                            Click="OpenLogFolderButton_Click"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="Output:"
+                               VerticalAlignment="Center"
+                               Opacity="0.8"/>
+
+                    <TextBox x:Name="OutputFolderTextBox"
+                             Width="650"
+                             IsReadOnly="True"
+                             PlaceholderText="No folder selected"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
         <TextBlock x:Name="ScopeTextBlock"
                    Grid.Row="2"
                    Text="Library scope: not loaded"
@@ -50,7 +72,7 @@
                 CornerRadius="6"
                 Padding="12">
             <StackPanel Spacing="8">
-                <TextBlock Text="Locations"
+                <TextBlock Text="Step 2 · Select locations"
                            FontSize="16"
                            FontWeight="SemiBold"/>
 
@@ -58,7 +80,7 @@
                            Text="Load a CSV to see WAWL locations."
                            TextWrapping="Wrap"/>
 
-                <ScrollViewer Height="150">
+                <ScrollViewer Height="160">
                     <StackPanel x:Name="LocationsPanel" Spacing="6"/>
                 </ScrollViewer>
             </StackPanel>
@@ -68,13 +90,42 @@
                 BorderThickness="1"
                 CornerRadius="6"
                 Padding="12">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Step 3 · Preview results"
+                           FontSize="16"
+                           FontWeight="SemiBold"/>
+
+                <TextBlock x:Name="PreviewSummaryTextBlock"
+                           Text="No preview yet. Load a CSV, choose locations, then click Preview."
+                           TextWrapping="Wrap"/>
+
+                <ScrollViewer Height="220">
+                    <StackPanel x:Name="PreviewBucketsPanel" Spacing="8"/>
+                </ScrollViewer>
+
+                <TextBlock Text="Last run summary"
+                           FontSize="16"
+                           FontWeight="SemiBold"/>
+
+                <TextBox x:Name="LastRunSummaryTextBox"
+                         Height="150"
+                         IsReadOnly="True"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="5"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12">
             <StackPanel Spacing="8">
-                <TextBlock Text="Status"
+                <TextBlock Text="Step 4 · Export"
                            FontSize="16"
                            FontWeight="SemiBold"/>
 
                 <TextBlock x:Name="StatusTextBlock"
-                           Text="Ready."
+                           Text="Choose an output folder, then load a CSV."
                            TextWrapping="Wrap"/>
 
                 <TextBlock Text="Run log (this session)"
@@ -83,15 +134,15 @@
                            Margin="0,12,0,0"/>
 
                 <TextBox x:Name="LogTextBox"
-                         Height="220"
+                         Height="180"
                          IsReadOnly="True"
                          TextWrapping="Wrap"
                          AcceptsReturn="True"/>
             </StackPanel>
         </Border>
 
-        <TextBlock Grid.Row="5"
+        <TextBlock Grid.Row="6"
                    Opacity="0.6"
-                   Text="Phase 7: TXT export + summary done"/>
+                   Text="Phase 8: UI polished + preview + robust errors"/>
     </Grid>
 </Window>

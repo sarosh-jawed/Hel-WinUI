@@ -66,7 +66,7 @@ public partial class App : Microsoft.UI.Xaml.Application
             {
                 var helConfig = HelConfigLoader.LoadAndValidate(context.Configuration);
 
-                string logsRoot = PathTokenResolver.ResolveLocalAppDataTokens(helConfig.Output.LogsRoot);
+                string logsRoot = PathTokenResolver.ResolveKnownTokens(helConfig.Output.LogsRoot);
 
                 Directory.CreateDirectory(logsRoot);
 
