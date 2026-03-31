@@ -60,7 +60,7 @@
   ],
   "Output": {
     "Root": "%LOCALAPPDATA%\\Hel\\Output",
-    "LogsRoot": "%DOCUMENTS%\\Hel\\Logs",
+    "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs",
     "MonthFolderFormat": "yyyy-MM",
     "UnassignedFileName": "Unassigned.txt",
     "RunSummaryFileName": "RunSummary.txt"
@@ -72,8 +72,8 @@
     "BulletPrefix": "*",
     "RecipientFileLineTemplate": "{Title} | {Barcode} | {CallNumber}",
     "UnassignedFileLineTemplate": "{Title} | {Barcode} | {CallNumber}",
-    "ClosingLine": "Thanks,",
-    "SignatureLine": "John",
+    "ClosingLine": "Thanks",
+    "SignatureLine": "",
     "SummaryHeader": "Hel Run Summary"
   }
 }

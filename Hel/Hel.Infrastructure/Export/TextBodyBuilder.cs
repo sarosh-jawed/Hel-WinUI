@@ -107,7 +107,11 @@ public sealed class TextBodyBuilder
     {
         sb.AppendLine();
         sb.AppendLine(_config.TextTemplate.ClosingLine);
-        sb.AppendLine(_config.TextTemplate.SignatureLine);
+
+        if (!string.IsNullOrWhiteSpace(_config.TextTemplate.SignatureLine))
+        {
+            sb.AppendLine(_config.TextTemplate.SignatureLine);
+        }
     }
 
     private static string ApplyItemTemplate(

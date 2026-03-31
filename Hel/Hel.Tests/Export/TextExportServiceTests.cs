@@ -72,10 +72,13 @@ public class TextExportServiceTests
 
             recipientText.Should().Contain("Hello here are the titles in your area that have been missing or lost");
             recipientText.Should().Contain("* Assigned Title | 111 | 303.38 A11");
-            recipientText.Should().Contain("Thanks,");
-            recipientText.Should().Contain("John");
+            recipientText.Should().Contain("Thanks");
+            recipientText.Should().NotContain("Thanks,");
+            recipientText.Should().NotContain("John");
 
             unassignedText.Should().Contain("* Unassigned Title | 222 | HB 1");
+            unassignedText.Should().Contain("Thanks");
+            unassignedText.Should().NotContain("John");
 
             summaryText.Should().Contain("Hel Run Summary");
             summaryText.Should().Contain("CSV file name: Monthly Missing Items.csv");
@@ -118,8 +121,8 @@ public class TextExportServiceTests
                 BulletPrefix = "*",
                 RecipientFileLineTemplate = "{Title} | {Barcode} | {CallNumber}",
                 UnassignedFileLineTemplate = "{Title} | {Barcode} | {CallNumber}",
-                ClosingLine = "Thanks,",
-                SignatureLine = "John",
+                ClosingLine = "Thanks",
+                SignatureLine = "",
                 SummaryHeader = "Hel Run Summary"
             }
         };
