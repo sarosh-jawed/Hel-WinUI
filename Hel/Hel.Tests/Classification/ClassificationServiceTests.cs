@@ -32,6 +32,7 @@ public class ClassificationServiceTests
 
         result.Classified.Should().HaveCount(1);
         result.Classified[0].BucketKey.Should().Be("loc-bucket");
+        result.Classified[0].RoutingReason.Should().Be("Location rule: location-stacks");
         result.Unassigned.Should().BeEmpty();
         result.ParseFailuresCount.Should().Be(0);
     }
@@ -58,6 +59,7 @@ public class ClassificationServiceTests
 
         result.Classified.Should().HaveCount(1);
         result.Classified[0].BucketKey.Should().Be("dewey-bucket");
+        result.Classified[0].RoutingReason.Should().StartWith("Dewey range rule: dewey-300-399");
         result.Unassigned.Should().BeEmpty();
         result.ParseFailuresCount.Should().Be(0);
     }
@@ -84,25 +86,52 @@ public class ClassificationServiceTests
 
         result.Classified.Should().BeEmpty();
         result.Unassigned.Should().HaveCount(1);
+        result.Unassigned[0].RoutingReason.Should().Be("Unreadable call number after normalization");
         result.ParseFailuresCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ReadableButUnmatched_Should_Go_To_Unassigned_WithReason()
+    {
+        var service = new ClassificationService(
+            CreateConfig(),
+            NullLogger<ClassificationService>.Instance);
+
+        var records = new List<ItemRecord>
+        {
+            CreateRecord(
+                libraryName: "William Allen White Library",
+                locationCode: "other",
+                locationName: "Other",
+                title: "Readable no match",
+                effectiveCallNumber: "700.1 ART",
+                holdingsCallNumber: "")
+        };
+
+        var result = await service.ClassifyAsync(records);
+
+        result.Classified.Should().BeEmpty();
+        result.Unassigned.Should().HaveCount(1);
+        result.Unassigned[0].RoutingReason.Should().Be("Readable call number but no rule matched");
+        result.ParseFailuresCount.Should().Be(0);
     }
 
     private static HelConfig CreateConfig()
     {
         return new HelConfig
         {
-            LocationRules = new List<LocationRule>
-            {
+            LocationRules =
+            [
                 new()
                 {
                     Key = "location-stacks",
                     LibraryName = "William Allen White Library",
-                    LocationCodes = new List<string> { "stacks" },
+                    LocationCodes = ["stacks"],
                     RecipientKey = "loc-bucket"
                 }
-            },
-            CallNumberRules = new List<CallNumberRule>
-            {
+            ],
+            CallNumberRules =
+            [
                 new()
                 {
                     Key = "dewey-300-399",
@@ -112,10 +141,10 @@ public class ClassificationServiceTests
                     RangeEnd = 399.999m,
                     RecipientKey = "dewey-bucket"
                 }
-            },
+            ],
             CallNumberNormalization = new CallNumberNormalization
             {
-                StripPrefixes = new List<string> { "REF", "Q", "R" }
+                StripPrefixes = ["REF", "Q", "R"]
             }
         };
     }

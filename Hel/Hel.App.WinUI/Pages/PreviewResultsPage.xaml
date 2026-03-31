@@ -1,0 +1,141 @@
+<Page
+    x:Class="Hel.App.WinUI.Pages.PreviewResultsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:models="using:Hel.App.WinUI.Models"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Padding="{StaticResource ShellPadding}" Spacing="16">
+            <Border
+                Background="{StaticResource CardBackgroundBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                Padding="{StaticResource CardPadding}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Preview ready" FontSize="24" FontWeight="SemiBold" />
+                    <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" TextWrapping="WrapWholeWords" />
+                </StackPanel>
+            </Border>
+
+            <Border
+                Background="{StaticResource CardBackgroundBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                Padding="{StaticResource CardPadding}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Run Summary Totals" FontSize="18" FontWeight="SemiBold" />
+
+                    <Grid ColumnSpacing="24" RowSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Total loaded" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.TotalRowsLoaded, Mode=OneWay}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Total after WAWL filter" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.RowsAfterWawlFilter, Mode=OneWay}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total after location filter" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind ViewModel.RowsAfterLocationFilter, Mode=OneWay}" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Assigned count" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind ViewModel.AssignedCount, Mode=OneWay}" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Unassigned count" FontWeight="SemiBold" Foreground="{StaticResource AccentGoldBrush}" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{x:Bind ViewModel.UnassignedCount, Mode=OneWay}" Foreground="{StaticResource AccentGoldBrush}" FontWeight="SemiBold" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Fallback used count" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="{x:Bind ViewModel.FallbackUsageCount, Mode=OneWay}" />
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Parse failure count" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="6" Grid.Column="1" Text="{x:Bind ViewModel.ParseFailuresCount, Mode=OneWay}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border
+                Background="{StaticResource CardBackgroundBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                Padding="{StaticResource CardPadding}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Recipient Bucket Preview" FontSize="18" FontWeight="SemiBold" />
+
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.Buckets, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:PreviewBucketViewModel">
+                                <Expander
+                                    Header="{x:Bind ExpandHeaderText, Mode=OneWay}"
+                                    IsExpanded="{x:Bind IsExpanded, Mode=TwoWay}">
+                                    <StackPanel Spacing="8" Margin="0,8,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <Button Content="Show all" Click="ShowAllButton_Click" Tag="{Binding}" IsEnabled="{x:Bind CanShowAll, Mode=OneWay}" />
+                                            <Button Content="Show first 50" Click="ShowFirstButton_Click" Tag="{Binding}" />
+                                        </StackPanel>
+
+                                        <controls:DataGrid
+                                                AutoGenerateColumns="False"
+                                                HeadersVisibility="Column"
+                                                IsReadOnly="True"
+                                                MinHeight="180"
+                                                MaxHeight="360"
+                                                RowHeight="40"
+                                                GridLinesVisibility="Horizontal"
+                                                FontSize="14"
+                                                Background="#263548"
+                                                BorderThickness="0"
+                                                CanUserResizeColumns="True"
+                                                CanUserSortColumns="False"
+                                                ItemsSource="{x:Bind VisibleRows, Mode=OneWay}">                
+                                            <controls:DataGrid.Columns>
+                                                <controls:DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="2.4*" />
+                                                <controls:DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="1.4*" />
+                                                <controls:DataGridTextColumn Header="Call number" Binding="{Binding CallNumber}" Width="1.4*" />
+                                                <controls:DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="1.6*" />
+                                                <controls:DataGridTextColumn Header="Routing reason" Binding="{Binding RoutingReason}" Width="3.2*" />
+                                            </controls:DataGrid.Columns>
+                                        </controls:DataGrid>
+                                    </StackPanel>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <InfoBar
+                Margin="0,2,0,0"
+                IsOpen="{x:Bind ViewModel.HasUnassignedWarning, Mode=OneWay}"
+                IsClosable="False"
+                Severity="Warning"
+                Title="Unassigned items"
+                Message="{x:Bind ViewModel.UnassignedWarningMessage, Mode=OneWay}" />
+
+            <InfoBar
+                Margin="0,2,0,0"
+                IsOpen="{x:Bind ViewModel.HasParseFailureWarning, Mode=OneWay}"
+                IsClosable="False"
+                Severity="Warning"
+                Title="Data quality alert"
+                Message="{x:Bind ViewModel.ParseFailureWarningMessage, Mode=OneWay}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

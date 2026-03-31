@@ -14,6 +14,6 @@ public interface IClassificationService
 
 public sealed record ClassificationResult(
     IReadOnlyList<ClassifiedItem> Classified,
-    IReadOnlyList<ItemRecord> Unassigned,
+    IReadOnlyList<UnassignedItem> Unassigned,
     int FallbackUsageCount,
     int ParseFailuresCount);

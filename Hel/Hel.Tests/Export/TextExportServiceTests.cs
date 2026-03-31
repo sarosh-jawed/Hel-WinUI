@@ -33,7 +33,8 @@ public class TextExportServiceTests
                         barcode: "111",
                         effectiveCallNumber: "303.38 A11",
                         holdingsCallNumber: ""),
-                    "wawl")
+                    "wawl",
+                    "Dewey range rule: dewey-000-099 (parsed 75.25)")
             };
 
             var unassigned = new List<ItemRecord>
@@ -92,15 +93,15 @@ public class TextExportServiceTests
     {
         return new HelConfig
         {
-            Recipients = new List<RecipientDefinition>
-            {
+            Recipients =
+            [
                 new()
                 {
                     Key = "wawl",
                     DisplayName = "William Allen White Library",
                     Email = ""
                 }
-            },
+            ],
             Output = new Output
             {
                 Root = "%LOCALAPPDATA%\\Hel\\Output",
