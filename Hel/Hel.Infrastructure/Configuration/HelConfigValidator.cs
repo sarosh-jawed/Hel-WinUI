@@ -235,8 +235,8 @@ public static class HelConfigValidator
         if (string.IsNullOrWhiteSpace(config.TextTemplate.ClosingLine))
             errors.Add("TextTemplate.ClosingLine is required.");
 
-        if (string.IsNullOrWhiteSpace(config.TextTemplate.SignatureLine))
-            errors.Add("TextTemplate.SignatureLine is required.");
+/*        if (string.IsNullOrWhiteSpace(config.TextTemplate.SignatureLine))
+            errors.Add("TextTemplate.SignatureLine is required.");*/
 
         if (string.IsNullOrWhiteSpace(config.TextTemplate.SummaryHeader))
             errors.Add("TextTemplate.SummaryHeader is required.");
