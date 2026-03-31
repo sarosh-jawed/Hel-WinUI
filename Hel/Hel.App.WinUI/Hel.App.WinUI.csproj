@@ -57,6 +57,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Update="Assets\HelApp.ico">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="config.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

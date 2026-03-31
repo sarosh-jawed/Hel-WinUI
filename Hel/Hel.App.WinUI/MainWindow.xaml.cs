@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Hel.App.WinUI.Pages;
 using Hel.App.WinUI.Services;
 using Hel.App.WinUI.ViewModels;
@@ -45,6 +46,9 @@ public sealed partial class MainWindow : Window
         var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
         var appWindow = AppWindow.GetFromWindowId(windowId);
         appWindow.Resize(new SizeInt32(1380, 940));
+
+        TryApplyWindowIcon(appWindow);
+        TryApplyMicaBackdrop();
 
         TryApplyMicaBackdrop();
 
@@ -174,6 +178,23 @@ public sealed partial class MainWindow : Window
         catch
         {
             // Fallback to solid shell brushes when Mica is unavailable.
+        }
+    }
+
+    private void TryApplyWindowIcon(AppWindow appWindow)
+    {
+        try
+        {
+            string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "HelApp.ico");
+
+            if (File.Exists(iconPath))
+            {
+                appWindow.SetIcon(iconPath);
+            }
+        }
+        catch
+        {
+            // Fallback to default icon if the custom icon is unavailable.
         }
     }
 }
