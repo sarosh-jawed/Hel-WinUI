@@ -11,7 +11,7 @@ namespace Hel.Tests.Export;
 public class TextExportServiceTests
 {
     [Fact]
-    public async Task ExportAsync_Should_Create_Recipient_Unassigned_And_Summary_Files()
+    public async Task ExportAsync_Should_Match_Golden_Output_Files()
     {
         string tempFolder = Path.Combine(Path.GetTempPath(), $"hel-export-{Guid.NewGuid():N}");
         Directory.CreateDirectory(tempFolder);
@@ -58,29 +58,34 @@ public class TextExportServiceTests
 
             await service.ExportAsync(classified, unassigned, summary, tempFolder);
 
-            string recipientPath = Path.Combine(tempFolder, "wawl.txt");
-            string unassignedPath = Path.Combine(tempFolder, "Unassigned.txt");
-            string summaryPath = Path.Combine(tempFolder, "RunSummary.txt");
+            string actualRecipientPath = Path.Combine(tempFolder, "wawl.txt");
+            string actualUnassignedPath = Path.Combine(tempFolder, "Unassigned.txt");
+            string actualSummaryPath = Path.Combine(tempFolder, "RunSummary.txt");
 
-            File.Exists(recipientPath).Should().BeTrue();
-            File.Exists(unassignedPath).Should().BeTrue();
-            File.Exists(summaryPath).Should().BeTrue();
+            string expectedRecipientPath = GetGoldenFixturePath("wawl.txt");
+            string expectedUnassignedPath = GetGoldenFixturePath("Unassigned.txt");
+            string expectedSummaryPath = GetGoldenFixturePath("RunSummary.txt");
 
-            string recipientText = await File.ReadAllTextAsync(recipientPath);
-            string unassignedText = await File.ReadAllTextAsync(unassignedPath);
-            string summaryText = await File.ReadAllTextAsync(summaryPath);
+            File.Exists(actualRecipientPath).Should().BeTrue();
+            File.Exists(actualUnassignedPath).Should().BeTrue();
+            File.Exists(actualSummaryPath).Should().BeTrue();
 
-            recipientText.Should().Contain("Hello here are the titles in your area that have been missing or lost");
-            recipientText.Should().Contain("* Assigned Title | 111 | 303.38 A11");
-            recipientText.Should().Contain("Thanks,");
-            recipientText.Should().Contain("John");
+            string actualRecipientText = await File.ReadAllTextAsync(actualRecipientPath);
+            string actualUnassignedText = await File.ReadAllTextAsync(actualUnassignedPath);
+            string actualSummaryText = await File.ReadAllTextAsync(actualSummaryPath);
 
-            unassignedText.Should().Contain("* Unassigned Title | 222 | HB 1");
+            string expectedRecipientText = await File.ReadAllTextAsync(expectedRecipientPath);
+            string expectedUnassignedText = await File.ReadAllTextAsync(expectedUnassignedPath);
+            string expectedSummaryText = await File.ReadAllTextAsync(expectedSummaryPath);
 
-            summaryText.Should().Contain("Hel Run Summary");
-            summaryText.Should().Contain("CSV file name: Monthly Missing Items.csv");
-            summaryText.Should().Contain("Rows after location filter: 5");
-            summaryText.Should().Contain("wawl: 1");
+            NormalizeForGoldenComparison(actualRecipientText)
+                .Should().Be(NormalizeForGoldenComparison(expectedRecipientText));
+
+            NormalizeForGoldenComparison(actualUnassignedText)
+                .Should().Be(NormalizeForGoldenComparison(expectedUnassignedText));
+
+            NormalizeForGoldenComparison(actualSummaryText)
+                .Should().Be(NormalizeForGoldenComparison(expectedSummaryText));
         }
         finally
         {
@@ -139,5 +144,25 @@ public class TextExportServiceTests
             new Barcode(barcode),
             new EffectiveCallNumber(effectiveCallNumber),
             new HoldingsCallNumber(holdingsCallNumber));
+    }
+
+    private static string GetGoldenFixturePath(string fileName)
+    {
+        return Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "Fixtures",
+            "Golden",
+            fileName));
+    }
+
+    private static string NormalizeForGoldenComparison(string value)
+    {
+        return value
+            .Replace("\r\n", "\n")
+            .Replace("\r", "\n")
+            .TrimEnd();
     }
 }

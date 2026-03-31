@@ -9,14 +9,14 @@ namespace Hel.Tests.Csv;
 public class CsvIngestServiceTests
 {
     [Fact]
-    public async Task IngestAsync_WhenEffectiveCallNumberIsPresent_UsesEffectiveCallNumber()
+    public async Task IngestAsync_WhenBxCallNumberIsPresent_UsesEffectiveCallNumber()
     {
         var config = CreateValidConfig();
         var service = new CsvIngestService(config, NullLogger<CsvIngestService>.Instance);
 
         string csvPath = CreateTempCsv(
             "loclibrary.name,effective_location.code,effective_location.name,instances.title,items.barcode,items.effective_call_number,holdings.call_number",
-            "William Allen White Library,stacks,Stacks,Test Title,12345,QA 76.73,HB 1");
+            "William Allen White Library,stacks,Stacks,Test Title,12345,BX 4700 .A1,HB 1");
 
         try
         {
@@ -26,9 +26,9 @@ public class CsvIngestServiceTests
             result.Records.Should().HaveCount(1);
 
             var record = result.Records[0];
-            record.EffectiveCallNumber.Value.Should().Be("QA 76.73");
+            record.EffectiveCallNumber.Value.Should().Be("BX 4700 .A1");
             record.HoldingsCallNumber.Value.Should().Be("HB 1");
-            record.ResolvedCallNumber.Value.Should().Be("QA 76.73");
+            record.ResolvedCallNumber.Value.Should().Be("BX 4700 .A1");
             record.UsedHoldingsFallback.Should().BeFalse();
         }
         finally
@@ -38,14 +38,14 @@ public class CsvIngestServiceTests
     }
 
     [Fact]
-    public async Task IngestAsync_WhenEffectiveCallNumberIsEmpty_UsesHoldingsCallNumber()
+    public async Task IngestAsync_WhenBxCallNumberIsEmpty_FallsBackToHoldingsCallNumber()
     {
         var config = CreateValidConfig();
         var service = new CsvIngestService(config, NullLogger<CsvIngestService>.Instance);
 
         string csvPath = CreateTempCsv(
             "loclibrary.name,effective_location.code,effective_location.name,instances.title,items.barcode,items.effective_call_number,holdings.call_number",
-            "William Allen White Library,stacks,Stacks,Test Title,12345,,HB 1");
+            "William Allen White Library,stacks,Stacks,Test Title,12345,,BX 4700 .A1");
 
         try
         {
@@ -56,8 +56,8 @@ public class CsvIngestServiceTests
 
             var record = result.Records[0];
             record.EffectiveCallNumber.Value.Should().BeEmpty();
-            record.HoldingsCallNumber.Value.Should().Be("HB 1");
-            record.ResolvedCallNumber.Value.Should().Be("HB 1");
+            record.HoldingsCallNumber.Value.Should().Be("BX 4700 .A1");
+            record.ResolvedCallNumber.Value.Should().Be("BX 4700 .A1");
             record.UsedHoldingsFallback.Should().BeTrue();
         }
         finally

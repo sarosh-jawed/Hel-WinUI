@@ -1,0 +1,13 @@
+Hel Run Summary
+
+CSV file name: Monthly Missing Items.csv
+Total rows loaded: 10
+Rows after WAWL filter: 10
+Rows after location filter: 5
+Assigned count: 1
+Unassigned count: 1
+Fallback count: 1
+Parse failures count: 0
+
+Counts per bucket:
+  wawl: 1
