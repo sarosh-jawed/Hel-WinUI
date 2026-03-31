@@ -1,18 +1,21 @@
 using Hel.Application.Contracts;
+using Hel.Application.Wizard;
+using Hel.App.WinUI.Pages;
+using Hel.App.WinUI.Services;
+using Hel.App.WinUI.ViewModels;
 using Hel.Infrastructure.Configuration;
 using Hel.Infrastructure.Csv;
 using Hel.Infrastructure.Classification;
 using Hel.Infrastructure.Workflow;
 using Hel.Infrastructure.Export;
+using Hel.Infrastructure.Filtering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Serilog;
 using System;
 using System.IO;
-using Hel.Infrastructure.Filtering;
 
 namespace Hel.App.WinUI;
 
@@ -22,6 +25,9 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     public static IServiceProvider Services
         => ((App)Current).GetServiceProvider();
+
+    public static MainWindow MainWindow
+        => Services.GetRequiredService<MainWindow>();
 
     private IServiceProvider GetServiceProvider()
     {
@@ -39,7 +45,6 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        // Create the window via DI (lets us inject services into UI later).
         var window = Services.GetRequiredService<MainWindow>();
         window.Activate();
     }
@@ -53,11 +58,11 @@ public partial class App : Microsoft.UI.Xaml.Application
 
                 config.SetBasePath(AppContext.BaseDirectory);
 
-                // Base shipped config with the app
                 config.AddJsonFile("config.json", optional: false, reloadOnChange: true);
 
-                // Optional machine/user-specific override
-                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string localAppData =
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
                 string localOverridePath = Path.Combine(localAppData, "Hel", "config.local.json");
 
                 config.AddJsonFile(localOverridePath, optional: true, reloadOnChange: true);
@@ -81,13 +86,10 @@ public partial class App : Microsoft.UI.Xaml.Application
             })
             .ConfigureServices((context, services) =>
             {
-                // Bind and validate once at startup.
                 var helConfig = HelConfigLoader.LoadAndValidate(context.Configuration);
 
                 services.AddSingleton(helConfig);
-
                 services.AddSingleton<IConfiguration>(context.Configuration);
-                services.AddSingleton<MainWindow>();
 
                 services.AddSingleton<IConfigProvider, ConfigProvider>();
                 services.AddSingleton<ICsvIngestService, CsvIngestService>();
@@ -96,6 +98,25 @@ public partial class App : Microsoft.UI.Xaml.Application
                 services.AddSingleton<TextBodyBuilder>();
                 services.AddSingleton<ITextExportService, TextExportService>();
                 services.AddSingleton<IWorkflowOrchestrator, WorkflowOrchestrator>();
+
+                services.AddSingleton<WizardState>();
+                services.AddSingleton<WizardSessionStore>();
+                services.AddSingleton<IStepNavigationService, StepNavigationService>();
+
+                services.AddSingleton<ShellViewModel>();
+                services.AddTransient<StartPageViewModel>();
+                services.AddTransient<LoadCsvPageViewModel>();
+                services.AddTransient<SelectLocationsPageViewModel>();
+                services.AddTransient<PreviewResultsPageViewModel>();
+                services.AddTransient<ExportFinishPageViewModel>();
+
+                services.AddTransient<StartPage>();
+                services.AddTransient<LoadCsvPage>();
+                services.AddTransient<SelectLocationsPage>();
+                services.AddTransient<PreviewResultsPage>();
+                services.AddTransient<ExportFinishPage>();
+
+                services.AddSingleton<MainWindow>();
 
                 services.AddLogging();
             })

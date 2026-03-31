@@ -31,7 +31,7 @@ public sealed class ClassificationService : IClassificationService
             throw new ArgumentNullException(nameof(records));
 
         var classified = new List<ClassifiedItem>();
-        var unassigned = new List<ItemRecord>();
+        var unassigned = new List<UnassignedItem>();
 
         int fallbackUsageCount = 0;
         int parseFailuresCount = 0;
@@ -43,23 +43,24 @@ public sealed class ClassificationService : IClassificationService
             if (record.UsedHoldingsFallback)
                 fallbackUsageCount++;
 
-            if (TryMatchLocationRule(record, out string locationBucketKey))
+            if (TryMatchLocationRule(record, out string locationBucketKey, out string locationReason))
             {
-                classified.Add(new ClassifiedItem(record, locationBucketKey));
+                classified.Add(new ClassifiedItem(record, locationBucketKey, locationReason));
                 continue;
             }
 
             bool parseFailed;
-            if (TryMatchCallNumberRule(record, out string callNumberBucketKey, out parseFailed))
+            string unmatchedReason;
+            if (TryMatchCallNumberRule(record, out string callNumberBucketKey, out string callNumberReason, out parseFailed, out unmatchedReason))
             {
-                classified.Add(new ClassifiedItem(record, callNumberBucketKey));
+                classified.Add(new ClassifiedItem(record, callNumberBucketKey, callNumberReason));
                 continue;
             }
 
             if (parseFailed)
                 parseFailuresCount++;
 
-            unassigned.Add(record);
+            unassigned.Add(new UnassignedItem(record, unmatchedReason));
         }
 
         _logger.LogInformation(
@@ -78,9 +79,10 @@ public sealed class ClassificationService : IClassificationService
         return Task.FromResult(result);
     }
 
-    private bool TryMatchLocationRule(ItemRecord record, out string bucketKey)
+    private bool TryMatchLocationRule(ItemRecord record, out string bucketKey, out string routingReason)
     {
         bucketKey = string.Empty;
+        routingReason = string.Empty;
 
         foreach (var rule in _config.LocationRules)
         {
@@ -96,6 +98,7 @@ public sealed class ClassificationService : IClassificationService
             if (codeMatch || nameMatch)
             {
                 bucketKey = rule.RecipientKey;
+                routingReason = $"Location rule: {rule.Key}";
                 return true;
             }
         }
@@ -103,9 +106,16 @@ public sealed class ClassificationService : IClassificationService
         return false;
     }
 
-    private bool TryMatchCallNumberRule(ItemRecord record, out string bucketKey, out bool parseFailed)
+    private bool TryMatchCallNumberRule(
+        ItemRecord record,
+        out string bucketKey,
+        out string routingReason,
+        out bool parseFailed,
+        out string unmatchedReason)
     {
         bucketKey = string.Empty;
+        routingReason = string.Empty;
+        unmatchedReason = "Readable call number but no rule matched";
         parseFailed = false;
 
         bool encounteredDeweyRule = false;
@@ -125,6 +135,7 @@ public sealed class ClassificationService : IClassificationService
                     normalized.StartsWith(rule.Prefix.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
                     bucketKey = rule.RecipientKey;
+                    routingReason = $"Call number prefix rule: {rule.Key}";
                     return true;
                 }
 
@@ -146,6 +157,7 @@ public sealed class ClassificationService : IClassificationService
                 if (!deweyParsed)
                 {
                     parseFailed = true;
+                    unmatchedReason = "Unreadable call number after normalization";
                     return false;
                 }
 
@@ -155,13 +167,21 @@ public sealed class ClassificationService : IClassificationService
                     deweyValue <= rule.RangeEnd.Value)
                 {
                     bucketKey = rule.RecipientKey;
+                    routingReason = $"Dewey range rule: {rule.Key} (parsed {deweyValue:0.###})";
                     return true;
                 }
             }
         }
 
         if (encounteredDeweyRule && !deweyParsed)
+        {
             parseFailed = true;
+            unmatchedReason = "Unreadable call number after normalization";
+        }
+        else
+        {
+            unmatchedReason = "Readable call number but no rule matched";
+        }
 
         return false;
     }
