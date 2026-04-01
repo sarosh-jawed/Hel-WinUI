@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Application.Configuration;
 using Hel.Infrastructure.Configuration;
 using Xunit;
@@ -19,7 +18,7 @@ public class HelConfigValidatorTests
 
         var errors = HelConfigValidator.Validate(config);
 
-        errors.Should().Contain(e => e.Contains("duplicated", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(errors, e => e.Contains("duplicated", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -30,7 +29,7 @@ public class HelConfigValidatorTests
 
         var errors = HelConfigValidator.Validate(config);
 
-        errors.Should().Contain(e => e.Contains("unknown recipient key", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(errors, e => e.Contains("unknown recipient key", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -41,7 +40,7 @@ public class HelConfigValidatorTests
 
         var errors = HelConfigValidator.Validate(config);
 
-        errors.Should().Contain(e => e.Contains("CsvColumns.Title", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(errors, e => e.Contains("CsvColumns.Title", StringComparison.OrdinalIgnoreCase));
     }
 
     private static HelConfig CreateValidConfig()
@@ -100,7 +99,7 @@ public class HelConfigValidatorTests
             Output = new Output
             {
                 Root = "%LOCALAPPDATA%\\Hel\\Output",
-                LogsRoot = "%DOCUMENTS%\\Hel\\Logs",
+                LogsRoot = "%LOCALAPPDATA%\\Hel\\Logs",
                 MonthFolderFormat = "yyyy-MM",
                 UnassignedFileName = "Unassigned.txt",
                 RunSummaryFileName = "RunSummary.txt"

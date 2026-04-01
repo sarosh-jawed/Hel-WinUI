@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Application.Configuration;
 using Hel.Domain.Models;
 using Hel.Domain.ValueObjects;
@@ -30,11 +29,11 @@ public class ClassificationServiceTests
 
         var result = await service.ClassifyAsync(records);
 
-        result.Classified.Should().HaveCount(1);
-        result.Classified[0].BucketKey.Should().Be("loc-bucket");
-        result.Classified[0].RoutingReason.Should().Be("Location rule: location-stacks");
-        result.Unassigned.Should().BeEmpty();
-        result.ParseFailuresCount.Should().Be(0);
+        Assert.Single(result.Classified);
+        Assert.Equal("loc-bucket", result.Classified[0].BucketKey);
+        Assert.Equal("Location rule: location-stacks", result.Classified[0].RoutingReason);
+        Assert.Empty(result.Unassigned);
+        Assert.Equal(0, result.ParseFailuresCount);
     }
 
     [Fact]
@@ -57,11 +56,11 @@ public class ClassificationServiceTests
 
         var result = await service.ClassifyAsync(records);
 
-        result.Classified.Should().HaveCount(1);
-        result.Classified[0].BucketKey.Should().Be("dewey-bucket");
-        result.Classified[0].RoutingReason.Should().StartWith("Dewey range rule: dewey-300-399");
-        result.Unassigned.Should().BeEmpty();
-        result.ParseFailuresCount.Should().Be(0);
+        Assert.Single(result.Classified);
+        Assert.Equal("dewey-bucket", result.Classified[0].BucketKey);
+        Assert.StartsWith("Dewey range rule: dewey-300-399", result.Classified[0].RoutingReason);
+        Assert.Empty(result.Unassigned);
+        Assert.Equal(0, result.ParseFailuresCount);
     }
 
     [Fact]
@@ -84,10 +83,10 @@ public class ClassificationServiceTests
 
         var result = await service.ClassifyAsync(records);
 
-        result.Classified.Should().BeEmpty();
-        result.Unassigned.Should().HaveCount(1);
-        result.Unassigned[0].RoutingReason.Should().Be("Unreadable call number after normalization");
-        result.ParseFailuresCount.Should().Be(1);
+        Assert.Empty(result.Classified);
+        Assert.Single(result.Unassigned);
+        Assert.Equal("Unreadable call number after normalization", result.Unassigned[0].RoutingReason);
+        Assert.Equal(1, result.ParseFailuresCount);
     }
 
     [Fact]
@@ -110,10 +109,10 @@ public class ClassificationServiceTests
 
         var result = await service.ClassifyAsync(records);
 
-        result.Classified.Should().BeEmpty();
-        result.Unassigned.Should().HaveCount(1);
-        result.Unassigned[0].RoutingReason.Should().Be("Readable call number but no rule matched");
-        result.ParseFailuresCount.Should().Be(0);
+        Assert.Empty(result.Classified);
+        Assert.Single(result.Unassigned);
+        Assert.Equal("Readable call number but no rule matched", result.Unassigned[0].RoutingReason);
+        Assert.Equal(0, result.ParseFailuresCount);
     }
 
     private static HelConfig CreateConfig()
