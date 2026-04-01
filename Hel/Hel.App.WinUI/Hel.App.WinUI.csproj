@@ -91,5 +91,9 @@
         <AppxBundle>Never</AppxBundle>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     </PropertyGroup>
-
+    
+    <PropertyGroup Condition="'$(CI)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true'">
+        <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
+        <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    </PropertyGroup>
 </Project>
