@@ -37,7 +37,7 @@ $configOverrideExamplePath = Join-Path $bundleRoot "config.local.example.json"
 @'
 {
   "Output": {
-    "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs"
+    "LogsRoot": "%DOCUMENTS%\\Hel\\Logs"
   }
 }
 '@ | Set-Content -Path $configOverrideExamplePath -Encoding UTF8
