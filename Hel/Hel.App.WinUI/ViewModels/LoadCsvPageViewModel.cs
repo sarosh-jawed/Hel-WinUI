@@ -130,7 +130,7 @@ public sealed class LoadCsvPageViewModel : ObservableObject
                 $"CSV loaded successfully. Records={RecordCount}, WAWL locations={LocationCount}, Parse failures={ParseFailuresCount}.";
 
             _logger.LogInformation(
-                "CSV loaded in LoadCsvPageViewModel. CsvPath={CsvPath}, Records={RecordCount}, Locations={LocationCount}, ParseFailures={ParseFailuresCount}",
+                "CSV loaded. CsvPath={CsvPath}, Records={RecordCount}, Locations={LocationCount}, ParseFailures={ParseFailuresCount}",
                 csvPath,
                 RecordCount,
                 LocationCount,
@@ -140,6 +140,15 @@ public sealed class LoadCsvPageViewModel : ObservableObject
         {
             StatusMessage = "CSV load was cancelled.";
             _logger.LogInformation("CSV load cancelled.");
+        }
+        catch (Exception ex)
+        {
+            // Keep the app stable: show a friendly message and allow the user to try another file.
+            StatusMessage = $"Failed to load CSV: {ex.Message}";
+            _logger.LogError(ex, "CSV load failed. CsvPath={CsvPath}", csvPath);
+
+            // Do NOT mark CSV loaded or unlock steps. Leave wizard state as-is.
+            // If the user had a previous valid CSV loaded, this also avoids wiping that state.
         }
         finally
         {

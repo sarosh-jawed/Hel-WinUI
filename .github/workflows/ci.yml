@@ -26,7 +26,7 @@ jobs:
         run: dotnet restore Hel/Hel.slnx
 
       - name: Build
-        run: dotnet build Hel/Hel.slnx --configuration Release --no-restore
+        run: dotnet build Hel/Hel.slnx --configuration Release --no-restore -p:GenerateAppxPackageOnBuild=false -p:AppxPackageSigningEnabled=false
 
       - name: Test
         run: dotnet test Hel/Hel.slnx --configuration Release --no-build --verbosity normal
