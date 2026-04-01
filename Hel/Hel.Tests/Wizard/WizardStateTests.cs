@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Application.Wizard;
 using Xunit;
 
@@ -11,12 +10,12 @@ public class WizardStateTests
     {
         var state = new WizardState();
 
-        state.CurrentStep.Should().Be(StepId.Start);
-        state.GetStepState(StepId.Start).Should().Be(StepState.Available);
-        state.GetStepState(StepId.LoadCsv).Should().Be(StepState.Available);
-        state.GetStepState(StepId.SelectLocations).Should().Be(StepState.Locked);
-        state.GetStepState(StepId.PreviewResults).Should().Be(StepState.Locked);
-        state.GetStepState(StepId.ExportFinish).Should().Be(StepState.Locked);
+        Assert.Equal(StepId.Start, state.CurrentStep);
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.Start));
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.LoadCsv));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.SelectLocations));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.PreviewResults));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.ExportFinish));
     }
 
     [Fact]
@@ -27,11 +26,11 @@ public class WizardStateTests
         state.MarkStartVisited();
         state.MarkCsvLoaded();
 
-        state.HasCsvLoaded.Should().BeTrue();
-        state.GetStepState(StepId.LoadCsv).Should().Be(StepState.Completed);
-        state.GetStepState(StepId.SelectLocations).Should().Be(StepState.Available);
-        state.GetStepState(StepId.PreviewResults).Should().Be(StepState.Locked);
-        state.GetStepState(StepId.ExportFinish).Should().Be(StepState.Locked);
+        Assert.True(state.HasCsvLoaded);
+        Assert.Equal(StepState.Completed, state.GetStepState(StepId.LoadCsv));
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.SelectLocations));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.PreviewResults));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.ExportFinish));
     }
 
     [Fact]
@@ -43,9 +42,9 @@ public class WizardStateTests
         state.MarkCsvLoaded();
         state.UpdateSelectedLocationsCount(3);
 
-        state.GetStepState(StepId.SelectLocations).Should().Be(StepState.Completed);
-        state.GetStepState(StepId.PreviewResults).Should().Be(StepState.Available);
-        state.GetStepState(StepId.ExportFinish).Should().Be(StepState.Locked);
+        Assert.Equal(StepState.Completed, state.GetStepState(StepId.SelectLocations));
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.PreviewResults));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.ExportFinish));
     }
 
     [Fact]
@@ -58,9 +57,9 @@ public class WizardStateTests
         state.UpdateSelectedLocationsCount(2);
         state.MarkPreviewReady();
 
-        state.HasPreview.Should().BeTrue();
-        state.GetStepState(StepId.PreviewResults).Should().Be(StepState.Completed);
-        state.GetStepState(StepId.ExportFinish).Should().Be(StepState.Available);
+        Assert.True(state.HasPreview);
+        Assert.Equal(StepState.Completed, state.GetStepState(StepId.PreviewResults));
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.ExportFinish));
     }
 
     [Fact]
@@ -74,9 +73,9 @@ public class WizardStateTests
         state.MarkPreviewReady();
         state.ResetAfterLocationChange();
 
-        state.HasPreview.Should().BeFalse();
-        state.GetStepState(StepId.PreviewResults).Should().Be(StepState.Available);
-        state.GetStepState(StepId.ExportFinish).Should().Be(StepState.Locked);
+        Assert.False(state.HasPreview);
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.PreviewResults));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.ExportFinish));
     }
 
     [Fact]
@@ -90,8 +89,8 @@ public class WizardStateTests
         state.MarkPreviewReady();
         state.UpdateSelectedLocationsCount(0);
 
-        state.GetStepState(StepId.SelectLocations).Should().Be(StepState.Available);
-        state.GetStepState(StepId.PreviewResults).Should().Be(StepState.Locked);
-        state.GetStepState(StepId.ExportFinish).Should().Be(StepState.Locked);
+        Assert.Equal(StepState.Available, state.GetStepState(StepId.SelectLocations));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.PreviewResults));
+        Assert.Equal(StepState.Locked, state.GetStepState(StepId.ExportFinish));
     }
 }

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Application.Configuration;
 using Hel.Domain.Models;
 using Hel.Domain.ValueObjects;
@@ -62,28 +61,28 @@ public class TextExportServiceTests
             string unassignedPath = Path.Combine(tempFolder, "Unassigned.txt");
             string summaryPath = Path.Combine(tempFolder, "RunSummary.txt");
 
-            File.Exists(recipientPath).Should().BeTrue();
-            File.Exists(unassignedPath).Should().BeTrue();
-            File.Exists(summaryPath).Should().BeTrue();
+            Assert.True(File.Exists(recipientPath));
+            Assert.True(File.Exists(unassignedPath));
+            Assert.True(File.Exists(summaryPath));
 
             string recipientText = await File.ReadAllTextAsync(recipientPath);
             string unassignedText = await File.ReadAllTextAsync(unassignedPath);
             string summaryText = await File.ReadAllTextAsync(summaryPath);
 
-            recipientText.Should().Contain("Hello here are the titles in your area that have been missing or lost");
-            recipientText.Should().Contain("* Assigned Title | 111 | 303.38 A11");
-            recipientText.Should().Contain("Thanks");
-            recipientText.Should().NotContain("Thanks,");
-            recipientText.Should().NotContain("John");
+            Assert.Contains("Hello here are the titles in your area that have been missing or lost", recipientText);
+            Assert.Contains("* Assigned Title | 111 | 303.38 A11", recipientText);
+            Assert.Contains("Thanks", recipientText);
+            Assert.DoesNotContain("Thanks,", recipientText);
+            Assert.DoesNotContain("John", recipientText);
 
-            unassignedText.Should().Contain("* Unassigned Title | 222 | HB 1");
-            unassignedText.Should().Contain("Thanks");
-            unassignedText.Should().NotContain("John");
+            Assert.Contains("* Unassigned Title | 222 | HB 1", unassignedText);
+            Assert.Contains("Thanks", unassignedText);
+            Assert.DoesNotContain("John", unassignedText);
 
-            summaryText.Should().Contain("Hel Run Summary");
-            summaryText.Should().Contain("CSV file name: Monthly Missing Items.csv");
-            summaryText.Should().Contain("Rows after location filter: 5");
-            summaryText.Should().Contain("wawl: 1");
+            Assert.Contains("Hel Run Summary", summaryText);
+            Assert.Contains("CSV file name: Monthly Missing Items.csv", summaryText);
+            Assert.Contains("Rows after location filter: 5", summaryText);
+            Assert.Contains("wawl: 1", summaryText);
         }
         finally
         {

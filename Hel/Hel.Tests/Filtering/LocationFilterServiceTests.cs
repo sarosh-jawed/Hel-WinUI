@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Domain.Models;
 using Hel.Domain.ValueObjects;
 using Hel.Infrastructure.Filtering;
@@ -23,8 +22,10 @@ public class LocationFilterServiceTests
 
         var locations = service.ExtractAvailableLocations(records, "William Allen White Library");
 
-        locations.Should().HaveCount(2);
-        locations.Select(x => x.Code).Should().BeEquivalentTo(new[] { "ref", "stacks" });
+        Assert.Equal(2, locations.Count);
+
+        var codes = locations.Select(x => x.Code).OrderBy(x => x).ToArray();
+        Assert.Equal(new[] { "ref", "stacks" }, codes);
     }
 
     [Fact]
@@ -44,10 +45,10 @@ public class LocationFilterServiceTests
             "William Allen White Library",
             new[] { "stacks" });
 
-        filtered.Should().HaveCount(1);
-        filtered[0].Title.Value.Should().Be("Title 1");
-        filtered[0].LocationCode.Value.Should().Be("stacks");
-        filtered[0].LibraryName.Value.Should().Be("William Allen White Library");
+        Assert.Single(filtered);
+        Assert.Equal("Title 1", filtered[0].Title.Value);
+        Assert.Equal("stacks", filtered[0].LocationCode.Value);
+        Assert.Equal("William Allen White Library", filtered[0].LibraryName.Value);
     }
 
     private static ItemRecord CreateRecord(

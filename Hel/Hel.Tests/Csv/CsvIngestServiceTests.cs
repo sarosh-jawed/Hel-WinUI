@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Application.Configuration;
 using Hel.Infrastructure.Csv;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -22,14 +21,14 @@ public class CsvIngestServiceTests
         {
             var result = await service.IngestAsync(csvPath);
 
-            result.ParseFailuresCount.Should().Be(0);
-            result.Records.Should().HaveCount(1);
+            Assert.Equal(0, result.ParseFailuresCount);
+            Assert.Single(result.Records);
 
             var record = result.Records[0];
-            record.EffectiveCallNumber.Value.Should().Be("QA 76.73");
-            record.HoldingsCallNumber.Value.Should().Be("HB 1");
-            record.ResolvedCallNumber.Value.Should().Be("QA 76.73");
-            record.UsedHoldingsFallback.Should().BeFalse();
+            Assert.Equal("QA 76.73", record.EffectiveCallNumber.Value);
+            Assert.Equal("HB 1", record.HoldingsCallNumber.Value);
+            Assert.Equal("QA 76.73", record.ResolvedCallNumber.Value);
+            Assert.False(record.UsedHoldingsFallback);
         }
         finally
         {
@@ -51,14 +50,14 @@ public class CsvIngestServiceTests
         {
             var result = await service.IngestAsync(csvPath);
 
-            result.ParseFailuresCount.Should().Be(0);
-            result.Records.Should().HaveCount(1);
+            Assert.Equal(0, result.ParseFailuresCount);
+            Assert.Single(result.Records);
 
             var record = result.Records[0];
-            record.EffectiveCallNumber.Value.Should().BeEmpty();
-            record.HoldingsCallNumber.Value.Should().Be("HB 1");
-            record.ResolvedCallNumber.Value.Should().Be("HB 1");
-            record.UsedHoldingsFallback.Should().BeTrue();
+            Assert.Equal(string.Empty, record.EffectiveCallNumber.Value);
+            Assert.Equal("HB 1", record.HoldingsCallNumber.Value);
+            Assert.Equal("HB 1", record.ResolvedCallNumber.Value);
+            Assert.True(record.UsedHoldingsFallback);
         }
         finally
         {
@@ -78,11 +77,9 @@ public class CsvIngestServiceTests
 
         try
         {
-            Func<Task> act = async () => await service.IngestAsync(csvPath);
-
-            await act.Should()
-                .ThrowAsync<InvalidOperationException>()
-                .WithMessage("*missing required header*items.effective_call_number*");
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.IngestAsync(csvPath));
+            Assert.Contains("missing required header", ex.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("items.effective_call_number", ex.Message, StringComparison.OrdinalIgnoreCase);
         }
         finally
         {

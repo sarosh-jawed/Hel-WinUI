@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Hel.Domain.Models;
 using Hel.Domain.ValueObjects;
 using Xunit;
@@ -19,8 +18,8 @@ public class ItemRecordTests
             new EffectiveCallNumber("QA 76.73"),
             new HoldingsCallNumber("HOLD 1"));
 
-        record.ResolvedCallNumber.Value.Should().Be("QA 76.73");
-        record.UsedHoldingsFallback.Should().BeFalse();
+        Assert.Equal("QA 76.73", record.ResolvedCallNumber.Value);
+        Assert.False(record.UsedHoldingsFallback);
     }
 
     [Fact]
@@ -35,7 +34,7 @@ public class ItemRecordTests
             new EffectiveCallNumber(""),
             new HoldingsCallNumber("HOLD 1"));
 
-        record.ResolvedCallNumber.Value.Should().Be("HOLD 1");
-        record.UsedHoldingsFallback.Should().BeTrue();
+        Assert.Equal("HOLD 1", record.ResolvedCallNumber.Value);
+        Assert.True(record.UsedHoldingsFallback);
     }
 }
