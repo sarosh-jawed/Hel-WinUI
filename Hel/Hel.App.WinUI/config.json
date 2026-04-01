@@ -1,9 +1,4 @@
 {
-  //  "App": {
-  //  "Name": "Hel",
-  //  "OutputRoot": "%LOCALAPPDATA%\\Hel\\Output",
-  //    "LogsRoot": "%DOCUMENTS%\\Hel\\Logs"
-  //  },
   "CsvColumns": {
     "LibraryName": "loclibrary.name",
     "LocationCode": "effective_location.code",
@@ -60,7 +55,7 @@
   ],
   "Output": {
     "Root": "%LOCALAPPDATA%\\Hel\\Output",
-    "LogsRoot": "%LOCALAPPDATA%\\Hel\\Logs",
+    "LogsRoot": "%DOCUMENTS%\\Hel\\Logs",
     "MonthFolderFormat": "yyyy-MM",
     "UnassignedFileName": "Unassigned.txt",
     "RunSummaryFileName": "RunSummary.txt"

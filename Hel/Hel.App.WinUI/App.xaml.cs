@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml;
 using Serilog;
 using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace Hel.App.WinUI;
 
@@ -41,10 +42,20 @@ public partial class App : Microsoft.UI.Xaml.Application
     {
         InitializeComponent();
         _host = CreateHost();
+
+        // Ensure Serilog flushes to disk on exit.
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => Log.CloseAndFlush();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        // Force a log event at startup so the rolling log file is created immediately.
+        var helConfig = Services.GetRequiredService<Hel.Application.Configuration.HelConfig>();
+        string resolvedLogsRoot = Hel.Infrastructure.Configuration.PathTokenResolver.ResolveKnownTokens(helConfig.Output.LogsRoot);
+
+        var logger = Services.GetRequiredService<ILogger<App>>();
+        logger.LogInformation("Hel launched. LogsRoot={LogsRoot} BaseDir={BaseDir}", resolvedLogsRoot, AppContext.BaseDirectory);
+
         var window = Services.GetRequiredService<MainWindow>();
         window.Activate();
     }
@@ -117,8 +128,6 @@ public partial class App : Microsoft.UI.Xaml.Application
                 services.AddTransient<ExportFinishPage>();
 
                 services.AddSingleton<MainWindow>();
-
-                services.AddLogging();
             })
             .Build();
     }

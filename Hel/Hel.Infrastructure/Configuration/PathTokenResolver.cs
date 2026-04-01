@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+
 namespace Hel.Infrastructure.Configuration;
 
 public static class PathTokenResolver
@@ -7,9 +10,22 @@ public static class PathTokenResolver
         if (string.IsNullOrWhiteSpace(value))
             return value;
 
-        string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        string documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        // Prefer environment variables first so packaged apps resolve to the real user profile folders.
+        // In packaged contexts, Environment.GetFolderPath(LocalApplicationData) can point to a container path.
+        string localAppData =
+            Environment.GetEnvironmentVariable("LOCALAPPDATA")
+            ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+        string userProfile =
+            Environment.GetEnvironmentVariable("USERPROFILE")
+            ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+        string documents =
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        // Extra safety: if MyDocuments is empty for any reason, fallback to USERPROFILE\Documents.
+        if (string.IsNullOrWhiteSpace(documents) && !string.IsNullOrWhiteSpace(userProfile))
+            documents = Path.Combine(userProfile, "Documents");
 
         return value
             .Replace("%LOCALAPPDATA%", localAppData, StringComparison.OrdinalIgnoreCase)
